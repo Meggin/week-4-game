@@ -32,12 +32,15 @@ $(document).ready(function() {
 
 	console.log("The characterList is working: " + characterList[1].name);
 
+	var characterSelected;
+
 	for (i = 0; i < characterList.length; i++) {
 		
 		// Create character list item.
 		var character = $("<li>");
 		var characterClass
 		character.addClass("ui-widget-content");
+		character.addClass("available-character");
 		
 		// Create character's name element.
 		var characterName = $("<div>");
@@ -59,8 +62,8 @@ $(document).ready(function() {
 
 		//Add data to each character.
 		character.attr("data-character", i);
-		character.attr("data-isCharacter", false);
-		character.attr("data-isEnemy", false);
+		character.attr("data-isCharacter", "false");
+		character.attr("data-isEnemy", "false");
 
 		// Append each character list item to list.
 		character.appendTo(".characterList");
@@ -71,8 +74,12 @@ $(document).ready(function() {
 		console.log("You are able to click a character" + $(this).attr("data-character"));
 		var selectedCharacter = $(this);
 		console.log("You are able to select your character: " + selectedCharacter.attr("data-character"));
-		selectedCharacter.attr("data-isCharacter", true);
+		selectedCharacter.attr("data-isCharacter", "true");
 		console.log("Is your character selected?" + selectedCharacter.attr("data-isCharacter"));
+		selectedCharacter.appendTo($("#character-placeholder"));
+		characterSelected = true;
+		if (characterSelected) {
+			$(".characterList").appendTo($("#enemy"));
+		}
 	});
-
 });
