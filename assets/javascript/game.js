@@ -33,6 +33,8 @@ $(document).ready(function() {
 	console.log("The characterList is working: " + characterList[1].name);
 
 	var characterSelected;
+	var enemySelected;
+	var enemiesAvailable;
 
 	for (i = 0; i < characterList.length; i++) {
 		
@@ -70,16 +72,28 @@ $(document).ready(function() {
 
 	};
 
-	$(".ui-widget-content").on("click", function() {
-		console.log("You are able to click a character" + $(this).attr("data-character"));
-		var selectedCharacter = $(this);
-		console.log("You are able to select your character: " + selectedCharacter.attr("data-character"));
-		selectedCharacter.attr("data-isCharacter", "true");
-		console.log("Is your character selected?" + selectedCharacter.attr("data-isCharacter"));
-		selectedCharacter.appendTo($("#character-placeholder"));
-		characterSelected = true;
-		if (characterSelected) {
-			$(".characterList").appendTo($("#enemy"));
+	$("li").on("click", function() {
+		if (characterSelected && enemySelected) {
+			return;
+		} else if (characterSelected && ($(this).attr("data-isCharacter") == "false")) {
+			console.log("You can pick the enemy.");
+			var selectedEnemy = $(this);
+			console.log("You are able to select your enemy: " + selectedEnemy.attr("data-character"));
+			selectedEnemy.attr("data-isEnemy", "true");
+			console.log("Is your enemy selected?" + selectedEnemy.attr("data-isEnemy"));
+			selectedEnemy.appendTo($("#selected-enemy"));
+			selectedEnemy.removeClass("available-character");
+			enemySelected = true;
+			$(".characterList").appendTo($("#available-enemies"));
+		} else {
+			var selectedCharacter = $(this);
+			console.log("You are able to select your character: " + selectedCharacter.attr("data-character"));
+			selectedCharacter.attr("data-isCharacter", "true");
+			console.log("Is your character selected?" + selectedCharacter.attr("data-isCharacter"));
+			selectedCharacter.appendTo($("#character-placeholder"));
+			selectedCharacter.removeClass("available-character");
+			characterSelected = true;
+			$(".characterList").appendTo($("#available-enemies"));
 		}
 	});
 });
