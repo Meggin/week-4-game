@@ -1,4 +1,6 @@
 $(document).ready(function() {
+	
+	// Create array of possible characters.
 	var characterList = [
 		{
 			name: "Obi-Wan Kenobi",
@@ -32,10 +34,12 @@ $(document).ready(function() {
 
 	console.log("The characterList is working: " + characterList[1].name);
 
+	// Set global variables.
 	var characterSelected;
 	var enemySelected;
 	var enemiesAvailable;
 
+	// Creates DOM elements for available characters from characterList[];
 	for (i = 0; i < characterList.length; i++) {
 		
 		// Create character list item.
@@ -72,27 +76,51 @@ $(document).ready(function() {
 
 	};
 
+	// Event fires any time click on list item.
 	$("li").on("click", function() {
+
+		// Don't do anything if character and enemy selected.
 		if (characterSelected && enemySelected) {
 			return;
+
+		// Pick enemy only after character selection.
+		// But your character can't also be your enemy.
 		} else if (characterSelected && ($(this).attr("data-isCharacter") == "false")) {
 			console.log("You can pick the enemy.");
 			var selectedEnemy = $(this);
 			console.log("You are able to select your enemy: " + selectedEnemy.attr("data-character"));
 			selectedEnemy.attr("data-isEnemy", "true");
 			console.log("Is your enemy selected?" + selectedEnemy.attr("data-isEnemy"));
+
+			// Add selected enemy to DOM.
 			selectedEnemy.appendTo($("#selected-enemy"));
+
+			// Remove this class to track of available characters.
 			selectedEnemy.removeClass("available-character");
+
+			// Keep track of enemy selection.
 			enemySelected = true;
+
+			// Update list of available enemies in DOM.
 			$(".characterList").appendTo($("#available-enemies"));
+
+		// Pick your character.
 		} else {
 			var selectedCharacter = $(this);
 			console.log("You are able to select your character: " + selectedCharacter.attr("data-character"));
 			selectedCharacter.attr("data-isCharacter", "true");
 			console.log("Is your character selected?" + selectedCharacter.attr("data-isCharacter"));
+
+			// Add selected character to DOM.
 			selectedCharacter.appendTo($("#character-placeholder"));
+
+			// Remove this class to keep track of available characters.
 			selectedCharacter.removeClass("available-character");
+			
+			// Keep track of character selection.
 			characterSelected = true;
+
+			// Update list of available enemies in DOM.
 			$(".characterList").appendTo($("#available-enemies"));
 		}
 	});
