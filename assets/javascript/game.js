@@ -1,83 +1,89 @@
 $(document).ready(function() {
-	
-	// Create array of possible characters.
-	var characterList = [
-		{
-			name: "Obi-Wan Kenobi",
-			picture: "assets/images/obi-wan.jpg",
-			hp: 120,
-			ap: 10,
-			cap: 10
-		},
-		{
-			name: "Luke Skywalker",
-			picture: "assets/images/luke.jpg",
-			hp: 100,
-			ap: 8,
-			cap: 8
-		},
-		{
-			name: "Darth Sidious",
-			picture: "assets/images/sidious.jpg",
-			hp: 150,
-			ap: 6,
-			cap: 6
-		},
-		{
-			name: "Darth Maul",
-			picture: "assets/images/maul.jpg",
-			hp: 180,
-			ap: 4,
-			cap: 4
-		}
-	]
 
-	console.log("The characterList is working: " + characterList[1].name);
-
-	// Set global variables.
+		// Set global variables.
 	var characterSelected;
 	var enemySelected;
 	var enemiesAvailable;
 	var powerSurge = 6;
 	var counter = 0;
 
-	// Creates DOM elements for available characters from characterList[];
-	for (i = 0; i < characterList.length; i++) {
+
+	// Create array of possible characters.
+	var characterList = [
+		{
+			name: "Obi-Wan Kenobi",
+			picture: "assets/images/obi-wan.jpg",
+			hp: 120,
+			ap: 2,
+			cap: 10
+		},
+		{
+			name: "Luke Skywalker",
+			picture: "assets/images/luke.jpg",
+			hp: 100,
+			ap: 4,
+			cap: 8
+		},
+		{
+			name: "Darth Sidious",
+			picture: "assets/images/sidious.jpg",
+			hp: 150,
+			ap: 4,
+			cap: 20
+		},
+		{
+			name: "Darth Maul",
+			picture: "assets/images/maul.jpg",
+			hp: 180,
+			ap: 2,
+			cap: 20
+		}
+	]
+
+	$.createCharacterList = function(characterList) {
 		
-		// Create character list item.
-		var character = $("<li>");
-		character.addClass("ui-widget-content");
-		character.addClass("available-character");
-		
-		// Create character's name element.
-		var characterName = $("<div>");
-		characterName.addClass("characterName");
-		characterName.text(characterList[i].name);
+		// Creates DOM elements for available characters from characterList[];
+		for (i = 0; i < characterList.length; i++) {
+			
+			// Create character list item.
+			var character = $("<li>");
+			character.addClass("ui-widget-content");
+			character.addClass("available-character");
+			
+			// Create character's name element.
+			var characterName = $("<div>");
+			characterName.addClass("characterName");
+			characterName.text(characterList[i].name);
 
-		// Create character's picture element.
-		var characterPicture = $("<img>");
-		characterPicture.addClass("characterPicture");
-		characterPicture.attr("src", characterList[i].picture);
-		
-		// Create character's health points element.
-		var characterHealth = $("<div>");
-		characterHealth.addClass("characterHealth");
-		characterHealth.text(characterList[i].hp);
+			// Create character's picture element.
+			var characterPicture = $("<img>");
+			characterPicture.addClass("characterPicture");
+			characterPicture.attr("src", characterList[i].picture);
+			
+			// Create character's health points element.
+			var characterHealth = $("<div>");
+			characterHealth.addClass("characterHealth");
+			characterHealth.text(characterList[i].hp);
 
-		// Append character's name, picture, and health to list item.
-		character.append(characterName, characterPicture, characterHealth);
+			// Append character's name, picture, and health to list item.
+			character.append(characterName, characterPicture, characterHealth);
 
-		//Add data to each character.
-		character.attr("data-character", i);
-		character.attr("data-attackPower", characterList[i].ap);
-		character.attr("data-counterAttackPower", characterList[i].cap);
-		character.attr("data-isCharacter", "false");
-		character.attr("data-isEnemy", "false");
+			//Add data to each character.
+			character.attr("data-character", i);
+			character.attr("data-attackPower", characterList[i].ap);
+			character.attr("data-counterAttackPower", characterList[i].cap);
+			character.attr("data-isCharacter", "false");
+			character.attr("data-isEnemy", "false");
 
-		// Append each character list item to list.
-		character.appendTo(".characterList");
+			// Append each character list item to list.
+			character.appendTo(".characterList");
 
+		};
 	};
+
+	console.log("The characterList is working: " + characterList[1].name);
+
+	$.createCharacterList(characterList);
 
 	// Event fires any time click on list item.
 	$("li").on("click", function() {
@@ -127,67 +133,80 @@ $(document).ready(function() {
 			$(".characterList").appendTo($("#available-enemies"));
 		}
 	});
-	
-	// Not gonna call this function just yet.
-	var updateCharacterHealthPoints = function(characterHealthPoints, enemyCounterAttackPoints) {
- 		
- 		characterHealthPoints = $(this).characterHealthPoints;
- 		if ((characterHealthPoints - enemyCounterAttackPoints) >= 0) {
- 			characterHealthPoints = characterHealthPoints - enemyCounterAttackPoints;
- 			$(".characterHealth").text($("characterHealthPoints"));
- 		} else {
- 			characterHealthPoints = 0;
- 			$(".characterHealth").text($("characterHealthPoints"));
- 		}
- 		return characterHealthPoints;
-	}
+
+	var gameOn = true;
 	
 	$("#attack").on("click", function() {
 
-		var selectedCharacterHealthPoints = $("#selected-character #character-placeholder .ui-widget-content .characterHealth").html();
-		console.log("Selected Character Health Points = " + selectedCharacterHealthPoints);
+		if (gameOn) {
+			var selectedCharacter = $("#selected-character #character-placeholder .ui-widget-content").html();
 
-		selectedCharacterHealthPoints = parseInt(selectedCharacterHealthPoints);
-		
-		var selectedCharacterAttackPower = $("#selected-character #character-placeholder .ui-widget-content").attr("data-attackPower");
-		console.log("Character Attack Power = " + selectedCharacterAttackPower);
+			var selectedEnemy = $("#fight-section #selected-enemy .ui-widget-content .characterName").html();
 
-		selectedCharacterAttackPower = parseInt(selectedCharacterAttackPower);
-		
-		var selectedEnemyHealthPoints = $("#fight-section #selected-enemy .ui-widget-content .characterHealth").html();
-		console.log("Enemy Health Points = " + selectedEnemyHealthPoints);
+			var selectedCharacterHealthPoints = $("#selected-character #character-placeholder .ui-widget-content .characterHealth").html();
+			console.log("Selected Character Health Points = " + selectedCharacterHealthPoints);
 
-		selectedEnemyHealthPoints = parseInt(selectedEnemyHealthPoints);
-		
-		var selectedEnemyCounterAttackPoints = $("#fight-section #selected-enemy .ui-widget-content").attr("data-counterAttackPower");
-		console.log("Enemy Counter Attack Points = " + selectedEnemyCounterAttackPoints);
+			selectedCharacterHealthPoints = parseInt(selectedCharacterHealthPoints);
+			
+			var selectedCharacterAttackPower = $("#selected-character #character-placeholder .ui-widget-content").attr("data-attackPower");
+			console.log("Character Attack Power = " + selectedCharacterAttackPower);
 
-		selectedEnemyCounterAttackPoints = parseInt(selectedEnemyCounterAttackPoints);
+			selectedCharacterAttackPower = parseInt(selectedCharacterAttackPower);
+			
+			var selectedEnemyHealthPoints = $("#fight-section #selected-enemy .ui-widget-content .characterHealth").html();
+			console.log("Enemy Health Points = " + selectedEnemyHealthPoints);
 
-		if ((selectedCharacterHealthPoints - selectedEnemyCounterAttackPoints) > 0) {
- 			selectedCharacterHealthPoints = selectedCharacterHealthPoints - selectedEnemyCounterAttackPoints;
- 			$("#selected-character #character-placeholder .ui-widget-content .characterHealth").html(selectedCharacterHealthPoints);
- 		} else {
- 			selectedCharacterHealthPoints = 0;
- 			$("#selected-character #character-placeholder .ui-widget-content .characterHealth").html(selectedCharacterHealthPoints);
- 		}
+			selectedEnemyHealthPoints = parseInt(selectedEnemyHealthPoints);
+			
+			var selectedEnemyCounterAttackPoints = $("#fight-section #selected-enemy .ui-widget-content").attr("data-counterAttackPower");
+			console.log("Enemy Counter Attack Points = " + selectedEnemyCounterAttackPoints);
+
+			selectedEnemyCounterAttackPoints = parseInt(selectedEnemyCounterAttackPoints);
+
+			if ((selectedCharacterHealthPoints - selectedEnemyCounterAttackPoints) > 0) {
+	 			selectedCharacterHealthPoints = selectedCharacterHealthPoints - selectedEnemyCounterAttackPoints;
+	 			$("#selected-character #character-placeholder .ui-widget-content .characterHealth").html(selectedCharacterHealthPoints);
+	 			var characterReport = "You attacked " + selectedEnemy + " for " + selectedCharacterAttackPower + " damage.";
+	 			var enemyReport = selectedEnemy + " attacked you back for " + selectedEnemyCounterAttackPoints + " damage.";
+	 			$("#attack-report").text(characterReport);
+	 			$("#losses-report").text(enemyReport);
+	 		} else {
+	 			var gameLostMessage = "You've been defeated . . . GAME OVER!!!";
+	 			selectedCharacterHealthPoints = selectedCharacterHealthPoints - selectedEnemyCounterAttackPoints;
+	 			$("#selected-character #character-placeholder .ui-widget-content .characterHealth").html(selectedCharacterHealthPoints);
+	 			$("#attack-report").text(gameLostMessage);
+	 			$("#losses-report").empty();
+	 			var restartBtn = $("<button>");
+	 			restartBtn.text("Restart");
+	 			restartBtn.addClass("restart");
+	 			restartBtn.appendTo("#fight-section");
+	 			gameOn = false;
+	 		}
 
 
-		if ((selectedEnemyHealthPoints - selectedCharacterAttackPower) > 0) {
- 			selectedEnemyHealthPoints = selectedEnemyHealthPoints - selectedCharacterAttackPower;
- 			$("#fight-section #selected-enemy .ui-widget-content .characterHealth").html(selectedEnemyHealthPoints);
- 			var updatedCharacterAttackPower = selectedCharacterAttackPower + powerSurge;
- 			console.log("Power surge is working: " + updatedCharacterAttackPower);
- 			$("#selected-character #character-placeholder .ui-widget-content").attr("data-attackPower", updatedCharacterAttackPower);
- 		} else {
- 			selectedEnemyHealthPoints = 0;
- 			$("#fight-section #selected-enemy .ui-widget-content .characterHealth").html(selectedEnemyHealthPoints);
- 		}
-
-		var characterReport = "Character Health Points = " + selectedCharacterHealthPoints;
-
-		var enemyReport = "Enemy Health Points = " + selectedEnemyHealthPoints;
-		
-		$("#attack-report").text(characterReport + " " + enemyReport);
+			if ((selectedEnemyHealthPoints - selectedCharacterAttackPower) > 0) {
+	 			selectedEnemyHealthPoints = selectedEnemyHealthPoints - selectedCharacterAttackPower;
+	 			$("#fight-section #selected-enemy .ui-widget-content .characterHealth").html(selectedEnemyHealthPoints);
+	 			var updatedCharacterAttackPower = selectedCharacterAttackPower + powerSurge;
+	 			console.log("Power surge is working: " + updatedCharacterAttackPower);
+	 			$("#selected-character #character-placeholder .ui-widget-content").attr("data-attackPower", updatedCharacterAttackPower);
+	 		} else {
+	 			selectedEnemyHealthPoints = 0;
+	 			$("#fight-section #selected-enemy .ui-widget-content .characterHealth").html(selectedEnemyHealthPoints);
+	 		}
+		} else {
+			console.log("Attack button shouldn't work when game is over.");
+		}	
     });
+	
+	$("#fight-section").on("click", ".restart", function() {
+        $.createCharacterList(characterList);
+        $("#character-placeholder").empty();
+        $("#available-enemies").empty();
+        $("#selected-enemy").empty();
+        $("#fight-section.button.restart").empty();
+        $("#attack-report").empty();
+        $(".restart").remove();
+    });
+
 });
