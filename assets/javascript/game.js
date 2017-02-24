@@ -176,6 +176,9 @@ $(document).ready(function() {
 		if ((selectedEnemyHealthPoints - selectedCharacterAttackPower) > 0) {
  			selectedEnemyHealthPoints = selectedEnemyHealthPoints - selectedCharacterAttackPower;
  			$("#fight-section #selected-enemy .ui-widget-content .characterHealth").html(selectedEnemyHealthPoints);
+ 			var updatedCharacterAttackPower = selectedCharacterAttackPower + powerSurge;
+ 			console.log("Power surge is working: " + updatedCharacterAttackPower);
+ 			$("#selected-character #character-placeholder .ui-widget-content").attr("data-attackPower", updatedCharacterAttackPower);
  		} else {
  			selectedEnemyHealthPoints = 0;
  			$("#fight-section #selected-enemy .ui-widget-content .characterHealth").html(selectedEnemyHealthPoints);
