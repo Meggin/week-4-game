@@ -51,6 +51,10 @@ li {
 	clear: both;
 }
 
+#attack-report {
+	clear: both;
+}
+
 /* 
   These rules take effect when the browser's width
   is 769px or more.

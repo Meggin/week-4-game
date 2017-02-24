@@ -44,7 +44,6 @@ $(document).ready(function() {
 		
 		// Create character list item.
 		var character = $("<li>");
-		var characterClass
 		character.addClass("ui-widget-content");
 		character.addClass("available-character");
 		
@@ -68,6 +67,8 @@ $(document).ready(function() {
 
 		//Add data to each character.
 		character.attr("data-character", i);
+		character.attr("data-attackPower", characterList[i].ap);
+		character.attr("data-counterAttackPower", characterList[i].cap);
 		character.attr("data-isCharacter", "false");
 		character.attr("data-isEnemy", "false");
 
@@ -129,9 +130,13 @@ $(document).ready(function() {
 		var characterHealthPoints = $("#selected-character #character-placeholder .ui-widget-content .characterHealth").html();
 		console.log("Character Health Points = " + characterHealthPoints);
 		var characterReport = "Character Health Points = " + characterHealthPoints;
+		var characterAttackPower = $("#selected-character #character-placeholder .ui-widget-content").attr("data-attackPower");
+		console.log("Character Attack Power = " + characterAttackPower);
 		var enemyHealthPoints = $("#fight-section #selected-enemy .ui-widget-content .characterHealth").html();
 		console.log("Enemy Health Points = " + enemyHealthPoints);
 		var enemyReport = "Enemy Health Points = " + enemyHealthPoints;
+		var enemyCounterAttackPoints = $("#fight-section #selected-enemy .ui-widget-content").attr("data-counterAttackPower");
+		console.log("Enemy Counter Attack Points = " + enemyCounterAttackPoints);
 		$("#attack-report").text(characterReport + " " + enemyReport);
     });
 });
