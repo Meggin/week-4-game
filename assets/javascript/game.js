@@ -38,6 +38,8 @@ $(document).ready(function() {
 	var characterSelected;
 	var enemySelected;
 	var enemiesAvailable;
+	var powerSurge = 6;
+	var counter = 0;
 
 	// Creates DOM elements for available characters from characterList[];
 	for (i = 0; i < characterList.length; i++) {
@@ -125,18 +127,64 @@ $(document).ready(function() {
 			$(".characterList").appendTo($("#available-enemies"));
 		}
 	});
+	
+	// Not gonna call this function just yet.
+	var updateCharacterHealthPoints = function(characterHealthPoints, enemyCounterAttackPoints) {
+ 		
+ 		characterHealthPoints = $(this).characterHealthPoints;
+ 		if ((characterHealthPoints - enemyCounterAttackPoints) >= 0) {
+ 			characterHealthPoints = characterHealthPoints - enemyCounterAttackPoints;
+ 			$(".characterHealth").text($("characterHealthPoints"));
+ 		} else {
+ 			characterHealthPoints = 0;
+ 			$(".characterHealth").text($("characterHealthPoints"));
+ 		}
+ 		return characterHealthPoints;
+	}
+	
 	$("#attack").on("click", function() {
-		console.log("Button event firing.");
-		var characterHealthPoints = $("#selected-character #character-placeholder .ui-widget-content .characterHealth").html();
-		console.log("Character Health Points = " + characterHealthPoints);
-		var characterReport = "Character Health Points = " + characterHealthPoints;
-		var characterAttackPower = $("#selected-character #character-placeholder .ui-widget-content").attr("data-attackPower");
-		console.log("Character Attack Power = " + characterAttackPower);
-		var enemyHealthPoints = $("#fight-section #selected-enemy .ui-widget-content .characterHealth").html();
-		console.log("Enemy Health Points = " + enemyHealthPoints);
-		var enemyReport = "Enemy Health Points = " + enemyHealthPoints;
-		var enemyCounterAttackPoints = $("#fight-section #selected-enemy .ui-widget-content").attr("data-counterAttackPower");
-		console.log("Enemy Counter Attack Points = " + enemyCounterAttackPoints);
+
+		var selectedCharacterHealthPoints = $("#selected-character #character-placeholder .ui-widget-content .characterHealth").html();
+		console.log("Selected Character Health Points = " + selectedCharacterHealthPoints);
+
+		selectedCharacterHealthPoints = parseInt(selectedCharacterHealthPoints);
+		
+		var selectedCharacterAttackPower = $("#selected-character #character-placeholder .ui-widget-content").attr("data-attackPower");
+		console.log("Character Attack Power = " + selectedCharacterAttackPower);
+
+		selectedCharacterAttackPower = parseInt(selectedCharacterAttackPower);
+		
+		var selectedEnemyHealthPoints = $("#fight-section #selected-enemy .ui-widget-content .characterHealth").html();
+		console.log("Enemy Health Points = " + selectedEnemyHealthPoints);
+
+		selectedEnemyHealthPoints = parseInt(selectedEnemyHealthPoints);
+		
+		var selectedEnemyCounterAttackPoints = $("#fight-section #selected-enemy .ui-widget-content").attr("data-counterAttackPower");
+		console.log("Enemy Counter Attack Points = " + selectedEnemyCounterAttackPoints);
+
+		selectedEnemyCounterAttackPoints = parseInt(selectedEnemyCounterAttackPoints);
+
+		if ((selectedCharacterHealthPoints - selectedEnemyCounterAttackPoints) > 0) {
+ 			selectedCharacterHealthPoints = selectedCharacterHealthPoints - selectedEnemyCounterAttackPoints;
+ 			$("#selected-character #character-placeholder .ui-widget-content .characterHealth").html(selectedCharacterHealthPoints);
+ 		} else {
+ 			selectedCharacterHealthPoints = 0;
+ 			$("#selected-character #character-placeholder .ui-widget-content .characterHealth").html(selectedCharacterHealthPoints);
+ 		}
+
+
+		if ((selectedEnemyHealthPoints - selectedCharacterAttackPower) > 0) {
+ 			selectedEnemyHealthPoints = selectedEnemyHealthPoints - selectedCharacterAttackPower;
+ 			$("#fight-section #selected-enemy .ui-widget-content .characterHealth").html(selectedEnemyHealthPoints);
+ 		} else {
+ 			selectedEnemyHealthPoints = 0;
+ 			$("#fight-section #selected-enemy .ui-widget-content .characterHealth").html(selectedEnemyHealthPoints);
+ 		}
+
+		var characterReport = "Character Health Points = " + selectedCharacterHealthPoints;
+
+		var enemyReport = "Enemy Health Points = " + selectedEnemyHealthPoints;
+		
 		$("#attack-report").text(characterReport + " " + enemyReport);
     });
 });
