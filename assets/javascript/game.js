@@ -124,4 +124,14 @@ $(document).ready(function() {
 			$(".characterList").appendTo($("#available-enemies"));
 		}
 	});
+	$("#attack").on("click", function() {
+		console.log("Button event firing.");
+		var characterHealthPoints = $("#selected-character #character-placeholder .ui-widget-content .characterHealth").html();
+		console.log("Character Health Points = " + characterHealthPoints);
+		var characterReport = "Character Health Points = " + characterHealthPoints;
+		var enemyHealthPoints = $("#fight-section #selected-enemy .ui-widget-content .characterHealth").html();
+		console.log("Enemy Health Points = " + enemyHealthPoints);
+		var enemyReport = "Enemy Health Points = " + enemyHealthPoints;
+		$("#attack-report").text(characterReport + " " + enemyReport);
+    });
 });

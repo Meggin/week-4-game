@@ -17,20 +17,38 @@ body {
 }
 
 header {
-
+	text-align: right;
 }
 
+li {
+	float: left;
+	width: 15%;
+	padding: 2%;
+	border: .01em solid #dddddd;
+	list-style-type: none;
+}
 
 .header-container {
-
 }
 
 .main-container {
 
 }
 
-#selectable {
-	list-style-type: none;
+.characterPicture {
+	width: 100%;
+}
+
+#selected-character {
+	clear: both;
+}
+
+#enemy-characters {
+	clear: both;
+}
+
+#fight-section {
+	clear: both;
 }
 
 /* 
