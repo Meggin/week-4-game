@@ -3,6 +3,7 @@ $(document).ready(function() {
 			// Set global variables.
 	var characterSelected;
 	var enemySelected;
+	var enemyDefeated;
 	var enemiesAvailable;
 	var powerSurge = 6;
 	var counter = 0;
@@ -102,7 +103,8 @@ $(document).ready(function() {
 				console.log("Is your enemy selected?" + selectedEnemy.attr("data-isEnemy"));
 
 				// Add selected enemy to DOM.
-				selectedEnemy.appendTo($("#selected-enemy"));
+				// Use prepend so next enemy is always first.
+				selectedEnemy.prependTo($("#selected-enemy"));
 
 				// Remove this class to track available characters.
 				selectedEnemy.removeClass("available-characters");
@@ -113,9 +115,6 @@ $(document).ready(function() {
 				$(".characterList").removeClass($("#available-characters"));
 
 				$("ol").addClass("enemyList").removeClass("characterList");
-
-				// Update list of available enemies in DOM.
-				$(".enemyList").appendTo($("#available-enemies"));
 
 			// Pick your character.
 			} else {
@@ -148,6 +147,7 @@ $(document).ready(function() {
 	$("#attack").on("click", function() {
 
 		if (gameOn) {
+
 			var selectedCharacter = $("#selected-character #character-placeholder .ui-widget-content").html();
 
 			var selectedEnemy = $("#fight-section #selected-enemy .ui-widget-content .characterName").html();
@@ -199,9 +199,43 @@ $(document).ready(function() {
 	 			var updatedCharacterAttackPower = selectedCharacterAttackPower + powerSurge;
 	 			console.log("Power surge is working: " + updatedCharacterAttackPower);
 	 			$("#selected-character #character-placeholder .ui-widget-content").attr("data-attackPower", updatedCharacterAttackPower);
-	 		} else {
-	 			selectedEnemyHealthPoints = 0;
+	 			enemyDefeated = false;
+	 		} else if ((selectedEnemyHealthPoints - selectedCharacterAttackPower) <= 0) {
+	 			selectedEnemyHealthPoints = selectedEnemyHealthPoints - selectedCharacterAttackPower;
 	 			$("#fight-section #selected-enemy .ui-widget-content .characterHealth").html(selectedEnemyHealthPoints);
+
+	 			//selectedEnemy.attr("data-isEnemy", "false");
+	 			// Todo: remove the enemy you beat.
+	 			var currentEnemy = $("#fight-section #selected-enemy .ui-widget-content");
+				currentEnemy.css('visibility', 'hidden');
+
+				enemyDefeated = true;
+				enemySelected = false;
+
+				$("#losses-report").empty();
+
+	 			if ($(".enemyList").is(":empty")) {
+	 				var enemyDefeatedMessage = "You Won!!! GAME OVER!!!";
+	 				$("#attack-report").text(enemyDefeatedMessage);
+	 				var restartBtn = $("<button>");
+	 				restartBtn.text("Restart");
+	 				restartBtn.addClass("restart");
+	 				restartBtn.appendTo("#fight-section");
+	 				gameOn = false;
+	 			} else {
+	 				var enemyDefeatedMessage = "You have defeated " + selectedEnemy + ", " + "you can choose to fight another enemy.";
+	 				$("#attack-report").text(enemyDefeatedMessage);
+	 			}
+	 				 			
+	 			// Todo: at any point you get to zero, you should die.
+	 			// Todo: once you beat the last creature, you will see the you won message, and the restart button will reappear.
+	 			// Todo: use awesome trick of descendant selectors in inspector to get colors in boxes, etc.
+	 			// Todo: one tricky bit might be the enemySelected boolean, so if anything is annoying it is probably that.
+
+			} else {
+	 			// Todo: if you press attack button, message will change again reminding you there is no enemy.
+	 			var noEnemyMessage = "No enemy here.";
+	 			$("#attack-report").text(noEnemyMessage);
 	 		}
 		} else {
 			console.log("Attack button shouldn't work when game is over.");
