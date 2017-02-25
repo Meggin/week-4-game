@@ -1,12 +1,12 @@
 $(document).ready(function() {
 
-		// Set global variables.
+			// Set global variables.
 	var characterSelected;
 	var enemySelected;
 	var enemiesAvailable;
 	var powerSurge = 6;
 	var counter = 0;
-
+	var gameOn = true;
 
 	// Create array of possible characters.
 	var characterList = [
@@ -39,8 +39,9 @@ $(document).ready(function() {
 			cap: 20
 		}
 	]
+	
 
-	$.createCharacterList = function(characterList) {
+	function createCharacterList(characterList) {
 		
 		// Creates DOM elements for available characters from characterList[];
 		for (i = 0; i < characterList.length; i++) {
@@ -48,7 +49,7 @@ $(document).ready(function() {
 			// Create character list item.
 			var character = $("<li>");
 			character.addClass("ui-widget-content");
-			character.addClass("available-character");
+			character.addClass("available-characters");
 			
 			// Create character's name element.
 			var characterName = $("<div>");
@@ -81,60 +82,68 @@ $(document).ready(function() {
 		};
 	};
 
-	console.log("The characterList is working: " + characterList[1].name);
+	createCharacterList(characterList);
 
-	$.createCharacterList(characterList);
+	function addLiClickListeners() {
+		// Event fires any time click on list item.
+		$("li").on("click", function() {
 
-	// Event fires any time click on list item.
-	$("li").on("click", function() {
+			// Don't do anything if character and enemy selected.
+			if (characterSelected && enemySelected) {
+				return;
 
-		// Don't do anything if character and enemy selected.
-		if (characterSelected && enemySelected) {
-			return;
+			// Pick enemy only after character selection.
+			// But your character can't also be your enemy.
+			} else if (characterSelected && ($(this).attr("data-isCharacter") == "false")) {
+				console.log("You can pick the enemy.");
+				var selectedEnemy = $(this);
+				console.log("You are able to select your enemy: " + selectedEnemy.attr("data-character"));
+				selectedEnemy.attr("data-isEnemy", "true");
+				console.log("Is your enemy selected?" + selectedEnemy.attr("data-isEnemy"));
 
-		// Pick enemy only after character selection.
-		// But your character can't also be your enemy.
-		} else if (characterSelected && ($(this).attr("data-isCharacter") == "false")) {
-			console.log("You can pick the enemy.");
-			var selectedEnemy = $(this);
-			console.log("You are able to select your enemy: " + selectedEnemy.attr("data-character"));
-			selectedEnemy.attr("data-isEnemy", "true");
-			console.log("Is your enemy selected?" + selectedEnemy.attr("data-isEnemy"));
+				// Add selected enemy to DOM.
+				selectedEnemy.appendTo($("#selected-enemy"));
 
-			// Add selected enemy to DOM.
-			selectedEnemy.appendTo($("#selected-enemy"));
+				// Remove this class to track available characters.
+				selectedEnemy.removeClass("available-characters");
 
-			// Remove this class to track of available characters.
-			selectedEnemy.removeClass("available-character");
+				// Keep track of enemy selection.
+				enemySelected = true;
 
-			// Keep track of enemy selection.
-			enemySelected = true;
+				$(".characterList").removeClass($("#available-characters"));
 
-			// Update list of available enemies in DOM.
-			$(".characterList").appendTo($("#available-enemies"));
+				$("ol").addClass("enemyList").removeClass("characterList");
 
-		// Pick your character.
-		} else {
-			var selectedCharacter = $(this);
-			console.log("You are able to select your character: " + selectedCharacter.attr("data-character"));
-			selectedCharacter.attr("data-isCharacter", "true");
-			console.log("Is your character selected?" + selectedCharacter.attr("data-isCharacter"));
+				// Update list of available enemies in DOM.
+				$(".enemyList").appendTo($("#available-enemies"));
 
-			// Add selected character to DOM.
-			selectedCharacter.appendTo($("#character-placeholder"));
+			// Pick your character.
+			} else {
+				var selectedCharacter = $(this);
+				console.log("You are able to select your character: " + selectedCharacter.attr("data-character"));
+				selectedCharacter.attr("data-isCharacter", "true");
+				console.log("Is your character selected?" + selectedCharacter.attr("data-isCharacter"));
 
-			// Remove this class to keep track of available characters.
-			selectedCharacter.removeClass("available-character");
-			
-			// Keep track of character selection.
-			characterSelected = true;
+				// Add selected character to DOM.
+				selectedCharacter.appendTo($("#character-placeholder"));
 
-			// Update list of available enemies in DOM.
-			$(".characterList").appendTo($("#available-enemies"));
-		}
-	});
+				// Remove this class to keep track of available characters.
+				selectedCharacter.removeClass("available-characters");
+				
+				// Keep track of character selection.
+				characterSelected = true;
 
-	var gameOn = true;
+				$(".characterList").removeClass($("#available-characters"));
+
+				$("ol").addClass("enemyList").removeClass("characterList");
+
+				// Update list of available enemies in DOM.
+				$(".enemyList").appendTo($("#available-enemies"));
+			}
+		});
+	}
+
+	addLiClickListeners();
 	
 	$("#attack").on("click", function() {
 
@@ -199,14 +208,20 @@ $(document).ready(function() {
 		}	
     });
 	
+	//$("#fight-section").on("click", ".restart", createCharacterList);
 	$("#fight-section").on("click", ".restart", function() {
-        $.createCharacterList(characterList);
-        $("#character-placeholder").empty();
-        $("#available-enemies").empty();
-        $("#selected-enemy").empty();
-        $("#fight-section.button.restart").empty();
-        $("#attack-report").empty();
-        $(".restart").remove();
+		$("ol").addClass("characterList").removeClass("enemyList");
+		$(".characterList").appendTo($("#available-characters"));
+		$(".characterList").empty();
+		createCharacterList(characterList);
+		addLiClickListeners();
+		$("#available-enemies").empty();
+		$("#character-placeholder").empty();
+		$("#selected-enemy").empty();
+		$("#fight-section.button.restart").empty();$("#attack-report").empty();
+		$(".restart").remove();
+		gameOn = true;
+		characterSelected = false;
+		enemySelected = false;
     });
-
 });
