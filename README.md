@@ -10,8 +10,6 @@ Sometimes the score is a bit off. I suspect it's because a score goes below zero
 
 My app doesn't look well. And I really like to finish with polish-- to feel proud about what I've built. I'm bummed that I ran out of time to add polish.
 
-Here's a link to the staged version, warts and all: https://desolate-taiga-32749.herokuapp.com/
-
 This week I also learned a life lesson: sometimes coding/problem solving and regular life stuff are hard to do at the same time. Debugging javascript takes concentration. It's not something I can do well later at night when the kids go to be. So I need to learn how to balance easier day work for later night shift, and use earlier hours to write/debug my javascript.
 
 Next assignment, I'm going to write detailed pseudocode in the javascript file, as my todos. I'm also going to refactor regularly. For every 2 hours or less of code, I will refactor. And I'm clearing out times in each day when the brain is functioning well, to write and debug my code.
